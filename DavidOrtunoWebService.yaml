@@ -1,0 +1,871 @@
+---
+openapi: 3.0.0
+info:
+  title: API - Web Service
+  description: API que permite realizar operaciones CRUD sobre Facultades, Escuelas, Secciones y personas, asi como operaciones internas como agregar, eliminar o consultar profesores y alumnos de una seccion
+  contact:
+    name: David Ortuño
+    url: http://github.com/soydavido
+    email: daortuno.17@est.ucab.edu.ve
+  license:
+    name: MIT
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/daortuno.17/API-WebService/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://localhost:3000
+paths:
+  /faculty/search/{filter}:
+    get:
+      description: Sirve para obtener las facultades registradas
+      parameters:
+      - name: filter
+        in: path
+        description: Definira el filtro de busqueda
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Devuelve una o varias facultades dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Faculty'
+        "400":
+          description: No se encuentran facultades disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /faculty/search/{id}:
+    get:
+      description: Sirve para obtener las facultades registradas
+      parameters:
+      - name: id
+        in: path
+        description: ID de la facultad
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Devuelve varias facultades
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Faculty'
+        "400":
+          description: No se encuentran facultades disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /faculty/add:
+    post:
+      description: A traves de esto se agregan facultades
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Faculty'
+      responses:
+        "200":
+          description: Agrega una facultad satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Faculty added"}'
+        "400":
+          description: No se encuentran facultades disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /faculty/modify:
+    patch:
+      description: Modificacion de facultades, unicamente prmitira la modificacion de nombre, descripcion, status, y deleted_date
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Faculty'
+      responses:
+        "200":
+          description: Modifico la facultad exitosamente
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Faculty modified"}'
+        "400":
+          description: No se encuentran facultades disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /faculty/status/{id}/{status}:
+    post:
+      description: Sirve para modificar el status de una facultad registrada
+      parameters:
+      - name: id
+        in: path
+        description: ID de la facultad
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      - name: status
+        in: path
+        description: Status a asignar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: enable
+      responses:
+        "200":
+          description: Estatus modificado
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Faculty status updated"}'
+        "400":
+          description: No se encuentran facultades asociadas a ese id
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Faculty not found"}'
+  /school/search/{filter}:
+    get:
+      description: Sirve para obtener las escuelas registradas
+      parameters:
+      - name: filter
+        in: path
+        description: Definira el filtro de busqueda
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Devuelve una o varias escuelas dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/School'
+        "400":
+          description: No se encuentran escuelas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /school/search/{id}:
+    get:
+      description: Sirve para obtener una escuela registrada
+      parameters:
+      - name: id
+        in: path
+        description: ID de la escuela
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Devuelve una o varias escuelas dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/School'
+        "400":
+          description: No se encuentran escuelas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /school/add:
+    post:
+      description: A traves de esto se agregan escuelas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+      responses:
+        "200":
+          description: Agrega una escuela satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"School added"}'
+        "400":
+          description: No se encuentran escuelas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /school/modify:
+    patch:
+      description: Modificacion de escuelas, unicamente prmitira la modificacion de nombre, descripcion, status, y deleted_date
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+      responses:
+        "200":
+          description: Devuelve una o varias escuelas dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"School modified"}'
+        "400":
+          description: No se encuentran escuelas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /school/status/{id}/{status}:
+    post:
+      description: Sirve para modificar el status de una escuela registrada
+      parameters:
+      - name: id
+        in: path
+        description: ID de la escuela
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      - name: status
+        in: path
+        description: Status a asignar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: enable
+      responses:
+        "200":
+          description: Estatus modificado
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"School status updated"}'
+        "400":
+          description: No se encuentran escuelas asociadas a ese id
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"school not found"}'
+  /section/search/{filter}:
+    get:
+      description: Sirve para obtener las escuelas registradas
+      parameters:
+      - name: filter
+        in: path
+        description: Definira el filtro de busqueda
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Devuelve una o varias secciones dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Section'
+        "400":
+          description: No se encuentran escuelas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /section/search/{id}:
+    get:
+      description: Sirve para obtener las escuelas registradas
+      parameters:
+      - name: id
+        in: path
+        description: ID de la seccion
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Devuelve una seccion
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Section'
+        "400":
+          description: No se encuentran escuelas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /section/add:
+    post:
+      description: A traves de esto se agregan secciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Section'
+      responses:
+        "200":
+          description: Agrega una seccion satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Section added"}'
+        "400":
+          description: No se encuentran secciones disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /section/modify:
+    patch:
+      description: Modificacion de secciones, unicamente permite el cambio de uc, semester, type, ht, hl, hp, name, description, deleted_date y status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Section'
+      responses:
+        "200":
+          description: Modifica satisfactoriamente una seccion
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Section modified"}'
+        "400":
+          description: No se encuentran secciones disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /section/status/{id}/{status}:
+    post:
+      description: Sirve para modificar el status de una seccion registrada
+      parameters:
+      - name: id
+        in: path
+        description: ID de la seccion
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      - name: status
+        in: path
+        description: Status a asignar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: enable
+      responses:
+        "200":
+          description: Estatus modificado
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Section status updated"}'
+        "400":
+          description: No se encuentran secciones asociadas a ese id
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Section not found"}'
+  /person/search/{filter}:
+    get:
+      description: Sirve para obtener las personas registradas, se puede buscar por ID o si no se envia nada, devuelve todas las personas registradas
+      parameters:
+      - name: filter
+        in: path
+        description: Definira el filtro de busqueda
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Devuelve una o varias personas dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+        "400":
+          description: No se encuentran personas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /person/search/{id}:
+    get:
+      description: Sirve para obtener las personas registradas, se puede buscar por ID o si no se envia nada, devuelve todas las personas registradas
+      parameters:
+      - name: id
+        in: path
+        description: ID de la persona
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      responses:
+        "200":
+          description: Devuelve una o varias personas dependiendo del caso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+        "400":
+          description: No se encuentran personas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /person/add:
+    post:
+      description: A traves de esto se agregan personas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+      responses:
+        "200":
+          description: Agrega una persona
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Person added"}'
+        "400":
+          description: No se encuentran personas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /person/modify:
+    patch:
+      description: Modificacion de Personas, unicamente permitira la modificacion de los campos dni, first_name, last_name, deleted_date y por consiguiente status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+      responses:
+        "200":
+          description: Modifica una persona satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Person modified"}'
+        "400":
+          description: No se encuentran personas disponibles
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Bad input parameter"}'
+  /person/status/{id}/{status}:
+    post:
+      description: Sirve para modificar el status de una persona registrada
+      parameters:
+      - name: id
+        in: path
+        description: ID de la persona
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      - name: status
+        in: path
+        description: Status a asignar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: enable
+      responses:
+        "200":
+          description: Estatus modificado
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Person status updated"}'
+        "400":
+          description: No se encuentran personas asociadas a ese id
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"Person not found"}'
+  /enrollment/teacher/{id}/{filter}:
+    get:
+      description: Devuelve todos los profesores asociados a una seccion
+      parameters:
+      - name: id
+        in: path
+        description: ID de la seccion
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      - name: filter
+        in: path
+        description: Definira el filtro de busqueda
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Devuelve los profesores asociadas a una seccion
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+        "400":
+          description: No se encuentran personas asociadas
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"No teachers register in the section"}'
+  /enrollment/students/{id}/{filter}:
+    get:
+      description: Devuelve todos los estudiantes asociados a una seccion
+      parameters:
+      - name: id
+        in: path
+        description: ID de la seccion
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          example: 1
+      - name: filter
+        in: path
+        description: Definira el filtro de busqueda
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Devuelve los estudiantes asociadas a una seccion
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+        "400":
+          description: No se encuentran personas asociadas
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message":"No students register in the section"}'
+components:
+  schemas:
+    BaseEntity:
+      required:
+      - created_date
+      - id
+      - status
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+        deleted_date:
+          type: string
+          format: date
+    Entity:
+      required:
+      - created_date
+      - id
+      - name
+      - status
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+        deleted_date:
+          type: string
+          format: date
+        name:
+          type: string
+          example: Nombre
+        description:
+          type: string
+          example: Descripcion breve
+    Faculty:
+      required:
+      - created_date
+      - id
+      - name
+      - status
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+          example: 2021-06-18
+        deleted_date:
+          type: string
+          format: date
+        name:
+          type: string
+          example: Ingenieria
+        description:
+          type: string
+          example: Facultad de Ingenieria donde se pueden tener varias escuelas
+    School:
+      required:
+      - created_date
+      - id
+      - name
+      - status
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+          example: 2021-04-23
+        deleted_date:
+          type: string
+          format: date
+          example: 2021-07-28
+        name:
+          type: string
+          example: Informatica
+        description:
+          type: string
+          example: Escuela de Informatica donde se pueden tener varias secciones
+        faculty:
+          $ref: '#/components/schemas/Faculty'
+    Section:
+      required:
+      - created_date
+      - hl
+      - hp
+      - ht
+      - id
+      - name
+      - semester
+      - status
+      - type
+      - uc
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+          example: 2021-04-18
+        deleted_date:
+          type: string
+          format: date
+        name:
+          type: string
+          example: Informatica
+        description:
+          type: string
+          example: Escuela de Informatica donde se ofrecen distintas secciones
+        school:
+          $ref: '#/components/schemas/School'
+        uc:
+          type: integer
+          example: 6
+        semester:
+          type: integer
+          example: 8
+        type:
+          type: string
+          example: mandatory/elective
+        ht:
+          type: number
+          format: float
+          example: 5
+        hp:
+          type: number
+          format: float
+          example: 1.5
+        hl:
+          type: number
+          format: float
+          example: 2.5
+    Person:
+      required:
+      - created_date
+      - dni
+      - first_name
+      - id
+      - last_name
+      - status
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+          example: 2016-06-18
+        deleted_date:
+          type: string
+          format: date
+        dni:
+          type: string
+          example: V26956031
+        first_name:
+          type: string
+          example: David
+        last_name:
+          type: string
+          example: Ortuño
+    Enrollment:
+      required:
+      - created_date
+      - id
+      - person
+      - status
+      - type_enrollment
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        status:
+          type: string
+          example: enabled/disabled
+        created_date:
+          type: string
+          format: date
+        deleted_date:
+          type: string
+          format: date
+        person:
+          $ref: '#/components/schemas/Person'
+        section:
+          $ref: '#/components/schemas/Section'
+        type_enrollment:
+          type: string
+          example: student/teacher
